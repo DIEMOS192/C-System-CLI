@@ -3,6 +3,9 @@
 #include "../include/commands/CdCommand.h"
 #include "../include/commands/PsCommand.h"
 #include "../include/commands/AnalyzeCommand.h"
+#include "../include/commands/HelpCommand.h"
+#include "../include/commands/VersionCommand.h"
+#include "../include/commands/PwdCommand.h"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -14,16 +17,15 @@ int main(int argc, char** argv) {
     // register built-in commands
     registry.registerCommand(createLsCommand());
     registry.registerCommand(createCdCommand());
+    registry.registerCommand(createPwdCommand());
     registry.registerCommand(createPsCommand());
     registry.registerCommand(createAnalyzeCommand("data/sample.csv"));
+    registry.registerCommand(createVersionCommand());
+    registry.registerCommand(createHelpCommand(registry));
 
     if (argc < 2) {
         std::cout << "Usage: " << argv[0] << " <command> [args...]\n";
-        std::cout << "Available commands:\n";
-        for (auto &name : registry.list()) {
-            auto *c = registry.get(name);
-            std::cout << "  " << name << " - " << (c ? c->help() : "") << "\n";
-        }
+        std::cout << "Try '" << argv[0] << " help' to list commands.\n";
         return 0;
     }
 

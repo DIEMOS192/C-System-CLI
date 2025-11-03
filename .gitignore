@@ -1,0 +1,58 @@
+/cmake-build-debug/
+/cmake-build-*/
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/cmake_install.cmake
+/Makefile
+/*.user
+/*.suo
+/*.userprefs
+/.idea/
+/.vscode/
+*.vcxproj*
+*.sln
+*.ipch
+*.pch
+*.obj
+*.o
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.lib
+*.so
+*.a
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Sample data
+/data/
+
+# OS files
+ehthumbs.db
+Icon\r
+
+# CLion
+cmake-build-*/
+.idea/
+*.iml
+
+# Coverage or test outputs
+coverage/
+
+# Visual Studio Code workspace
+.vscode/
+
+# Mac
+*.DS_Store
+
+# Windows
+Thumbs.db
+
+# Python cache (if any)
+__pycache__/
+*.pyc

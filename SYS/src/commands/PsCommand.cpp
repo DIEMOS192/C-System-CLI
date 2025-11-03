@@ -1,17 +1,22 @@
 #include "../../include/commands/PsCommand.h"
 #include <iostream>
 #include <cstdlib>
+#include <string>
 
 class PsCommand : public ICommand {
 public:
     std::string name() const override { return "ps"; }
-    std::string help() const override { return "Show processes (delegates to platform 'ps' / 'tasklist')"; }
+    std::string help() const override { return "Show processes (ps [args...] -> tasklist/ps)"; }
     int execute(const std::vector<std::string>& args) override {
 #if defined(_WIN32)
-        // Use tasklist on Windows
-        return std::system("tasklist");
+        // Use tasklist on Windows; pass through simple args
+        std::string cmd = "tasklist";
+        for (auto &a : args) { cmd += " "; cmd += a; }
+        return std::system(cmd.c_str());
 #else
-        return std::system("ps aux");
+        std::string cmd = "ps aux";
+        for (auto &a : args) { cmd += " "; cmd += a; }
+        return std::system(cmd.c_str());
 #endif
     }
 };
