@@ -26,4 +26,4 @@ else()
 endif()
 
 # Provide a default version macro if not supplied by toolchain
-target_compile_definitions(sys-cli PRIVATE SYSCLI_VERSION="0.1.0")
+target_compile_definitions(sys-cli PRIVATE SYSCLI_VERSION="0.2.0")

@@ -1,4 +1,5 @@
 #include "../../include/commands/LsCommand.h"
+#include "../../include/ColorUtils.h"
 #include <filesystem>
 #include <iostream>
 #include <iomanip>
@@ -36,10 +37,16 @@ public:
             for (auto &entry : std::filesystem::directory_iterator(p)) {
                 auto name = entry.path().filename().string();
                 if (!all && !name.empty() && name[0] == '.') continue;
+
+                std::string displayName = name;
+                if (entry.is_directory()) {
+                    displayName = ColorUtils::colorize(name + "/", ColorUtils::BLUE);
+                } else if (name.size() > 4 && name.substr(name.size()-4) == ".exe") {
+                    displayName = ColorUtils::colorize(name, ColorUtils::GREEN);
+                }
+
                 if (!longfmt) {
-                    std::cout << name;
-                    if (entry.is_directory()) std::cout << "/";
-                    std::cout << "\n";
+                    std::cout << displayName << "\n";
                 } else {
                     uintmax_t sz = 0; std::error_code ec;
                     if (entry.is_regular_file(ec)) sz = entry.file_size(ec);
@@ -49,13 +56,11 @@ public:
                     std::time_t cftime = std::chrono::system_clock::to_time_t(sctp);
                     std::tm* tm = std::localtime(&cftime);
                     char buf[20]{}; if (tm) std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M", tm);
-                    std::cout << std::setw(10) << humanSize(sz) << "  " << buf << "  " << name;
-                    if (entry.is_directory()) std::cout << "/";
-                    std::cout << "\n";
+                    std::cout << std::setw(10) << humanSize(sz) << "  " << buf << "  " << displayName << "\n";
                 }
             }
         } catch (const std::exception& e) {
-            std::cerr << "ls: " << e.what() << '\n';
+            ColorUtils::printError("ls: " + std::string(e.what()));
             return 2;
         }
         return 0;

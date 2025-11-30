@@ -1,6 +1,6 @@
 # SYS CLI
 
-Small example C++ CLI with a command registry and a few built-in commands.
+A robust, cross-platform C++ CLI tool with an interactive REPL, command history, and colorized output.
 
 ## Build
 
@@ -20,38 +20,61 @@ cmake --build build
 
 The binary is `sys-cli` (or `sys-cli.exe` on Windows) inside the chosen build folder.
 
-## Usage
+## Interactive Mode (REPL)
+
+Run the program without arguments to enter the interactive shell:
 
 ```bash
-./sys-cli                 # prints usage with hint to help
-./sys-cli help            # list commands
-./sys-cli help ls         # show help for a command
-./sys-cli version         # show version
-
-# Filesystem
-./sys-cli ls              # list current directory
-./sys-cli ls -a           # include dot files
-./sys-cli ls -l           # long format with sizes and timestamps
-./sys-cli ls path/to/dir  # list given path
-./sys-cli pwd             # print working directory
-./sys-cli cd ..           # change directory
-./sys-cli cd -            # toggle back to previous directory
-
-# Processes
-./sys-cli ps              # delegates to tasklist (Windows) or ps aux (Unix)
-./sys-cli ps /FI "IMAGENAME eq conhost.exe"  # pass-through args
-
-# CSV analysis
-./sys-cli analyze                     # analyze data/sample.csv by default
-./sys-cli analyze path/to/file.csv    # analyze given file
+./sys-cli
 ```
 
-### Analyze output
+Features in interactive mode:
 
-- Prints row/column counts
-- Computes numeric stats per column (min/max/mean) ignoring non-numeric values
+- **Colorized Prompt**: Shows current working directory.
+- **Command History**: Use `history` to view past commands.
+- **Quick Recall**: Use `!!` to re-run the last command.
+- **Persistent State**: `cd` commands persist between lines.
+
+## Commands
+
+### General
+
+- `help`: List all commands or get help for a specific one.
+- `version`: Show current version (0.2.0).
+- `history`: Show session command history.
+- `exit` / `quit`: Exit the shell.
+
+### Filesystem
+
+- `ls`: List files with **color coding** (Blue for dirs, Green for executables).
+  - `ls -a`: Include hidden files.
+  - `ls -l`: Long format with sizes and timestamps.
+- `pwd`: Print working directory.
+- `cd <path>`: Change directory.
+- `cd -`: Toggle back to previous directory.
+
+### Processes
+
+- `ps`: List running processes.
+  - `ps --filter <name>`: Filter processes by name (e.g., `ps --filter chrome`).
+
+### Data Analysis
+
+- `analyze [file]`: Analyze a CSV file.
+  - Computes **Count, Min, Max, Mean, Median, and StdDev** for numeric columns.
+  - Generates a colorized report.
+
+## Configuration
+
+Create a `.sysclirc` file in the working directory to customize settings:
+
+```ini
+prompt_color=GREEN
+```
+
+Supported colors: `RED`, `GREEN`, `BLUE`, `CYAN` (default).
 
 ## Notes
 
-- Requires a C++17 compiler (uses `<filesystem>`)
-- On Windows, `ps` uses `tasklist`; on Unix-like systems it uses `ps aux`
+- Requires a C++17 compiler (uses `<filesystem>`).
+- Cross-platform support for Windows and Linux/macOS.
