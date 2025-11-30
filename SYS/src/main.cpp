@@ -6,6 +6,7 @@
 #include "../include/commands/HelpCommand.h"
 #include "../include/commands/VersionCommand.h"
 #include "../include/commands/PwdCommand.h"
+#include "../include/Utils.h"
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -24,8 +25,31 @@ int main(int argc, char** argv) {
     registry.registerCommand(createHelpCommand(registry));
 
     if (argc < 2) {
-        std::cout << "Usage: " << argv[0] << " <command> [args...]\n";
-        std::cout << "Try '" << argv[0] << " help' to list commands.\n";
+        std::cout << "SYS CLI Interactive Mode\n";
+        std::cout << "Type 'exit' or 'quit' to leave.\n";
+
+        std::string line;
+        while (true) {
+            std::cout << "> ";
+            if (!std::getline(std::cin, line)) break;
+            if (line.empty()) continue;
+
+            auto parts = SYSUtils::split(line);
+            if (parts.empty()) continue;
+
+            std::string cmd = parts[0];
+            if (cmd == "exit" || cmd == "quit") break;
+
+            std::vector<std::string> args;
+            for (size_t i = 1; i < parts.size(); ++i) args.push_back(parts[i]);
+
+            auto *c = registry.get(cmd);
+            if (!c) {
+                std::cerr << "Unknown command: " << cmd << "\n";
+            } else {
+                c->execute(args);
+            }
+        }
         return 0;
     }
 
